@@ -161,7 +161,7 @@
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
 	</storageModule>
-	<storageModule moduleId="com.silabs.ide.project.core" project.generation="24" projectCommon.buildArtifactType="EXE" projectCommon.importModeId="COPY" projectCommon.kitId="com.silabs.ide.kit.none" projectCommon.partId="com.silabs.mcu.si32.efm32.efm32g.efm32g222f128" projectCommon.sdkId="com.silabs.sdk.si32.efm32.sls:2.0.11"/>
+	<storageModule moduleId="com.silabs.ide.project.core" project.generation="28" projectCommon.buildArtifactType="EXE" projectCommon.importModeId="COPY" projectCommon.kitId="com.silabs.ide.kit.none" projectCommon.partId="com.silabs.mcu.si32.efm32.efm32g.efm32g222f128" projectCommon.sdkId="com.silabs.sdk.si32.efm32.sls:2.0.11"/>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="USB-voltmeter.com.silabs.ide.project.core.cdt.cdtMbsProjectType.1756610204" name="SLS CDT Project" projectType="com.silabs.ide.project.core.cdt.cdtMbsProjectType"/>
 	</storageModule>

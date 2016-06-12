@@ -424,6 +424,14 @@ extern void PRS_enter_DefaultMode_from_RESET(void) {
 extern void PORTIO_enter_DefaultMode_from_RESET(void) {
 
 	// $[Port A Configuration]
+
+	/* Pin PA8 is configured to Push-pull */
+	GPIO->P[0].MODEH = (GPIO->P[0].MODEH & ~_GPIO_P_MODEH_MODE8_MASK)
+			| GPIO_P_MODEH_MODE8_PUSHPULL;
+
+	/* Pin PA9 is configured to Push-pull with alt. drive strength */
+	GPIO->P[0].MODEH = (GPIO->P[0].MODEH & ~_GPIO_P_MODEH_MODE9_MASK)
+			| GPIO_P_MODEH_MODE9_PUSHPULLDRIVE;
 	// [Port A Configuration]$
 
 	// $[Port B Configuration]
@@ -446,10 +454,6 @@ extern void PORTIO_enter_DefaultMode_from_RESET(void) {
 	GPIO->P[4].DOUT |= (1 << 11);
 	GPIO->P[4].MODEH = (GPIO->P[4].MODEH & ~_GPIO_P_MODEH_MODE11_MASK)
 			| GPIO_P_MODEH_MODE11_INPUT;
-
-	/* Pin PE13 is configured to Push-pull with alt. drive strength */
-	GPIO->P[4].MODEH = (GPIO->P[4].MODEH & ~_GPIO_P_MODEH_MODE13_MASK)
-			| GPIO_P_MODEH_MODE13_PUSHPULLDRIVE;
 	// [Port E Configuration]$
 
 	// $[Port F Configuration]
