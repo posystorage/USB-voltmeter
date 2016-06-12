@@ -15,7 +15,11 @@
     <property object="DefaultMode" propertyId="mode.diagramLocation" value="100, 100"/>
     <property object="GPIO" propertyId="ABPeripheral.included" value="true"/>
     <property object="PA8" propertyId="ports.settings.pinmode" value="Push-pull"/>
+    <property object="PA9" propertyId="ports.settings.dout" value="1"/>
+    <property object="PA9" propertyId="ports.settings.filter" value="Enabled"/>
     <property object="PA9" propertyId="ports.settings.pinmode" value="Push-pull drive"/>
+    <property object="PA9" propertyId="ports.settings.pulldirection" value="Pullup"/>
+    <property object="PA9" propertyId="ports.settings.pullup" value="Enabled"/>
     <property object="PE10" propertyId="ports.settings.dout" value="1"/>
     <property object="PE10" propertyId="ports.settings.filter" value="Enabled"/>
     <property object="PE10" propertyId="ports.settings.pinmode" value="Push-pull"/>

@@ -40,10 +40,6 @@ void sys_int(void)
     /* Enable DAC channel 0, located on pin PB11 */
     DAC_Enable(DAC0, 0, true);
 
-    //CMU_ClockEnable(cmuClock_GPIO, true);
-    //GPIO_PinModeSet(gpioPortA, 9, gpioModePushPullDrive, 1);
-    //GPIO_PinModeSet(gpioPortA, 8, gpioModePushPullDrive, 1);
-
 }
 
 
@@ -76,7 +72,6 @@ int main(void)
     uint8_t cache1 = 0;
     uint8_t cache = 0;
     uint32_t DAC_Value;
-    uint8_t cache2 = 0;
     sys_int();
     while (1)
     {
@@ -95,19 +90,37 @@ int main(void)
 
         if(sample < 0xd0 )
         {
+        	for(i = 0; i < 200000; i++);
+        	ADC_Start(ADC0, adcStartSingle);
+			/* Wait while conversion is active */
+			while (ADC0->STATUS & ADC_STATUS_SINGLEACT) ;
+			/* Get ADC result */
+			sample = ADC_DataSingleGet(ADC0);
+			if(sample < 0xd0 )
+			{
             GPIO_PinOutSet(gpioPortA, 8);
            GPIO_PinModeSet(gpioPortE, 13, gpioModePushPullDrive, 1);
            GPIO_PinOutSet(gpioPortE, 13);
            DAC_Value = 0xfff;
            DAC_WriteData(DAC0, DAC_Value, 0);
-        	while(1);
+           GPIO_PinOutToggle(gpioPortA, 9);
+        	while(1)
+        	{
+        		for(i = 0; i < 200000; i++);
+				ADC_Start(ADC0, adcStartSingle);
+				/* Wait while conversion is active */
+				while (ADC0->STATUS & ADC_STATUS_SINGLEACT) ;
+				/* Get ADC result */
+				sample = ADC_DataSingleGet(ADC0);
+				if(sample>0xffe)break;
+        	}
+			}
 
         }
         else
         {
             GPIO_PinOutClear(gpioPortA, 8);
             GPIO_PinModeSet(gpioPortE, 13, gpioModeInput, 0);
-            //GPIO_PinOutClear(gpioPortE, 13);
         }
 
         cache1 = sample;
@@ -118,4 +131,3 @@ int main(void)
     }
 }
 
-// GPIO_PinOutToggle(gpioPortA, 8);
