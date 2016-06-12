@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ASCII"?>
+<device:XMLDevice xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:device="http://www.silabs.com/sls/hc/document/device.ecore" name="EFM32G222F128" partId="com.silabs.mcu.si32.efm32.efm32g.efm32g222f128">
+  <mode name="DefaultMode">
+    <property object="ADC0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="ADC0" propertyId="adc.inputsettings.ch5" value="Enabled"/>
+    <property object="ADC0" propertyId="scanmode.scanmodesettings.reference" value="Buffered VDD"/>
+    <property object="ADC0" propertyId="scanmode.scanmodesettings.scaninput" value="ADC_SCANCTRL_INPUTMASK_CH5"/>
+    <property object="ADC0" propertyId="singlesamplemode.singlesamplemodesettings.acquisitiontimeadcclockcycles" value="64"/>
+    <property object="ADC0" propertyId="singlesamplemode.singlesamplemodesettings.input" value="Channel 5 (PD5)"/>
+    <property object="ADC0" propertyId="singlesamplemode.singlesamplemodesettings.singlesamplemode" value="Enabled"/>
+    <property object="DAC0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="DAC0" propertyId="dac.channel0.channel0" value="Enabled"/>
+    <property object="DAC0" propertyId="dac.settings.hfperclkdivisor" value="/16"/>
+    <property object="DefaultMode" propertyId="mode.diagramLocation" value="100, 100"/>
+    <property object="GPIO" propertyId="ABPeripheral.included" value="true"/>
+    <property object="PE10" propertyId="ports.settings.dout" value="1"/>
+    <property object="PE10" propertyId="ports.settings.filter" value="Enabled"/>
+    <property object="PE10" propertyId="ports.settings.pinmode" value="Push-pull"/>
+    <property object="PE10" propertyId="ports.settings.pulldirection" value="Pullup"/>
+    <property object="PE10" propertyId="ports.settings.pullup" value="Enabled"/>
+    <property object="PE11" propertyId="ports.settings.dout" value="1"/>
+    <property object="PE11" propertyId="ports.settings.filter" value="Enabled"/>
+    <property object="PE11" propertyId="ports.settings.pinmode" value="Input"/>
+    <property object="PE11" propertyId="ports.settings.pulldirection" value="Pullup"/>
+    <property object="PE11" propertyId="ports.settings.pullup" value="Enabled"/>
+    <property object="PE13" propertyId="ports.settings.pinmode" value="Push-pull drive"/>
+    <property object="PORTIO" propertyId="portio.adc0.enable.ch5" value="Enabled"/>
+    <property object="PORTIO" propertyId="portio.dac0.enable.out0" value="Enabled"/>
+    <property object="PORTIO" propertyId="portio.usart0.enable.rx" value="Enabled"/>
+    <property object="PORTIO" propertyId="portio.usart0.enable.tx" value="Enabled"/>
+    <property object="USART0" propertyId="ABPeripheral.included" value="true"/>
+  </mode>
+  <modeTransition>
+    <property object="RESET &#x2192; DefaultMode" propertyId="modeTransition.target" value="DefaultMode"/>
+    <property object="RESET &#x2192; DefaultMode" propertyId="modeTransition.source" value="RESET"/>
+  </modeTransition>
+</device:XMLDevice>
