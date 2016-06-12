@@ -83,7 +83,7 @@ int main(void)
         for(i = 0; i < 20000; i++);
         //for(i = 0; i < 200000; i++);
 
-        DAC_Value = 0x428;
+        DAC_Value = 0x7ff;
         DAC_WriteData(DAC0, DAC_Value, 0);
 
         ADC_Start(ADC0, adcStartSingle);
@@ -92,7 +92,7 @@ int main(void)
         /* Get ADC result */
         sample = ADC_DataSingleGet(ADC0);
 
-        if(sample < 0x7f)
+        if(sample < 0xe0)
         {
             GPIO_PinOutSet(gpioPortA, 8);
         }
