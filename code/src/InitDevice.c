@@ -185,7 +185,7 @@ extern void DAC0_enter_DefaultMode_from_RESET(void) {
 
 	init.convMode = dacConvModeContinuous;
 	init.refresh = dacRefresh8;
-	init.reference = dacRef1V25;
+	init.reference = dacRefVDD;
 	init.diff = 0;
 	init.sineEnable = 0;
 	init.outMode = dacOutputPin;
@@ -454,6 +454,10 @@ extern void PORTIO_enter_DefaultMode_from_RESET(void) {
 	GPIO->P[4].DOUT |= (1 << 11);
 	GPIO->P[4].MODEH = (GPIO->P[4].MODEH & ~_GPIO_P_MODEH_MODE11_MASK)
 			| GPIO_P_MODEH_MODE11_INPUT;
+
+	/* Pin PE13 is configured to Input enabled */
+	GPIO->P[4].MODEH = (GPIO->P[4].MODEH & ~_GPIO_P_MODEH_MODE13_MASK)
+			| GPIO_P_MODEH_MODE13_INPUT;
 	// [Port E Configuration]$
 
 	// $[Port F Configuration]

@@ -76,6 +76,7 @@ int main(void)
     uint8_t cache1 = 0;
     uint8_t cache = 0;
     uint32_t DAC_Value;
+    uint8_t cache2 = 0;
     sys_int();
     while (1)
     {
@@ -83,7 +84,7 @@ int main(void)
         for(i = 0; i < 20000; i++);
         //for(i = 0; i < 200000; i++);
 
-        DAC_Value = 0x7ff;
+        DAC_Value = 0x2e8;
         DAC_WriteData(DAC0, DAC_Value, 0);
 
         ADC_Start(ADC0, adcStartSingle);
@@ -92,13 +93,21 @@ int main(void)
         /* Get ADC result */
         sample = ADC_DataSingleGet(ADC0);
 
-        if(sample < 0xe0)
+        if(sample < 0xd0 )
         {
             GPIO_PinOutSet(gpioPortA, 8);
+           GPIO_PinModeSet(gpioPortE, 13, gpioModePushPullDrive, 1);
+           GPIO_PinOutSet(gpioPortE, 13);
+           DAC_Value = 0xfff;
+           DAC_WriteData(DAC0, DAC_Value, 0);
+        	while(1);
+
         }
         else
         {
             GPIO_PinOutClear(gpioPortA, 8);
+            GPIO_PinModeSet(gpioPortE, 13, gpioModeInput, 0);
+            //GPIO_PinOutClear(gpioPortE, 13);
         }
 
         cache1 = sample;

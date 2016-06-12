@@ -11,6 +11,7 @@
     <property object="DAC0" propertyId="ABPeripheral.included" value="true"/>
     <property object="DAC0" propertyId="dac.channel0.channel0" value="Enabled"/>
     <property object="DAC0" propertyId="dac.settings.hfperclkdivisor" value="/16"/>
+    <property object="DAC0" propertyId="dac.settings.referencevoltage" value="VDD"/>
     <property object="DefaultMode" propertyId="mode.diagramLocation" value="100, 100"/>
     <property object="GPIO" propertyId="ABPeripheral.included" value="true"/>
     <property object="PA8" propertyId="ports.settings.pinmode" value="Push-pull"/>
@@ -25,6 +26,7 @@
     <property object="PE11" propertyId="ports.settings.pinmode" value="Input"/>
     <property object="PE11" propertyId="ports.settings.pulldirection" value="Pullup"/>
     <property object="PE11" propertyId="ports.settings.pullup" value="Enabled"/>
+    <property object="PE13" propertyId="ports.settings.pinmode" value="Input"/>
     <property object="PORTIO" propertyId="portio.adc0.enable.ch5" value="Enabled"/>
     <property object="PORTIO" propertyId="portio.dac0.enable.out0" value="Enabled"/>
     <property object="PORTIO" propertyId="portio.usart0.enable.rx" value="Enabled"/>
