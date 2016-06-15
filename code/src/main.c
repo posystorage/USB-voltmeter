@@ -17,7 +17,7 @@ void USART0_RX_IRQHandler(void)
 {
     if(USART_Rx(USART0) == 0x05)
     {
-        GPIO_PinOutToggle(gpioPortA, 9);
+        //GPIO_PinOutToggle(gpioPortA, 9);
     }
 }
 
@@ -88,6 +88,37 @@ uint32_t ADC0_get_send_result()
 
 }
 
+void adc_change_input_ch(uint8_t ch)
+{
+	ADC_InitSingle_TypeDef initsingle = ADC_INITSINGLE_DEFAULT;
+    switch(ch)
+    {
+    case 4:
+        initsingle.prsSel = adcPRSSELCh0;
+        initsingle.acqTime = adcAcqTime64;
+        initsingle.reference = adcRef1V25;
+        initsingle.resolution = adcRes12Bit;
+        initsingle.input = adcSingleInpCh4;
+        initsingle.diff = 0;
+        initsingle.prsEnable = 0;
+        initsingle.leftAdjust = 0;
+        initsingle.rep = 0;
+        ADC_InitSingle(ADC0, &initsingle);
+        break;
+    case 5:
+        initsingle.prsSel = adcPRSSELCh0;
+        initsingle.acqTime = adcAcqTime64;
+        initsingle.reference = adcRef1V25;
+        initsingle.resolution = adcRes12Bit;
+        initsingle.input = adcSingleInpCh5;
+        initsingle.diff = 0;
+        initsingle.prsEnable = 0;
+        initsingle.leftAdjust = 0;
+        initsingle.rep = 0;
+        ADC_InitSingle(ADC0, &initsingle);
+        break;
+    }
+}
 
 /**************************************************************************//**
  * @brief  Main function
@@ -95,7 +126,6 @@ uint32_t ADC0_get_send_result()
 int main(void)
 {
     int i;
-    //unsigned char ucData = 0;
 
     uint32_t sample;
     uint8_t working_satae = 1;//0-ÆÕÍ¨5v  //1-qc2.0Ç°×à   //2-qc2.0-9v
@@ -109,6 +139,7 @@ int main(void)
 			{
 				for(i = 0; i < 20000; i++);
 				DAC_Enable(DAC0, 0, 0);
+				adc_change_input_ch(4);
 				ADC0_get_send_result();
 				break;
 			}//case 0
@@ -118,10 +149,15 @@ int main(void)
 				for(i = 0; i < 20000; i++);
 				DAC_Value = 0x2e8;
 				DAC_WriteData(DAC0, DAC_Value, 0);
-				sample =  ADC0_get_send_result();
+				adc_change_input_ch(4);
+				ADC0_get_send_result();
+				adc_change_input_ch(5);
+				sample =  ADC0_get_result();
+
 				if(sample < 0xd0 )
 				{
 					for(i = 0; i < 20000; i++);
+					//adc_change_input_ch(5);
 					sample =  ADC0_get_result();
 					if(sample < 0xd0 )
 					{
@@ -142,20 +178,30 @@ int main(void)
 					}
 
 				}
+
 				break;
 			}//case 1
 			case 2:
 			{
 				DAC_Enable(DAC0, 0, 1);
 				for(i = 0; i < 20000; i++);
-				sample = ADC0_get_send_result();
-				if(sample > 0x800)
+				adc_change_input_ch(4);
+				ADC0_get_send_result();
+				adc_change_input_ch(5);
+				sample = ADC0_get_result();
+				if(sample > 0x840)
 				{
+					for(i = 0; i < 20000; i++);
+					//adc_change_input_ch(5);
+					sample =  ADC0_get_result();
+					if(sample > 0x800)
+					{
 					working_satae = 1;
 					GPIO_PinOutClear(gpioPortA, 8);
 					GPIO_PinOutSet(gpioPortA, 9);
 					GPIO_PinOutClear(gpioPortE, 13);
 					GPIO_PinModeSet(gpioPortE, 13, gpioModeInput, 0);
+					}
 				}
 				break;
 			}//case 2
