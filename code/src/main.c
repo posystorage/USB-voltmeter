@@ -59,6 +59,35 @@ void DAC_WriteData(DAC_TypeDef *dac, unsigned int value, unsigned int ch)
     }
 }
 
+uint32_t ADC0_get_result()
+{
+    uint32_t samp;
+    ADC_Start(ADC0, adcStartSingle);
+    /* Wait while conversion is active */
+    while (ADC0->STATUS & ADC_STATUS_SINGLEACT) ;
+    /* Get ADC result */
+    samp = ADC_DataSingleGet(ADC0);
+    return samp;
+}
+
+uint32_t ADC0_get_send_result()
+{
+    uint32_t samp;
+
+    uint8_t cache1 = 0;
+    uint8_t cache = 0;
+    uint32_t cache2 = 0;
+    samp = ADC0_get_result();
+    cache2 = samp;
+    cache1 = samp;
+    samp >>= 8;
+    cache = samp;
+    USART_Tx(USART0, cache);
+    USART_Tx(USART0, cache1);
+    return cache2;
+
+}
+
 
 /**************************************************************************//**
  * @brief  Main function
@@ -69,65 +98,68 @@ int main(void)
     //unsigned char ucData = 0;
 
     uint32_t sample;
-    uint8_t cache1 = 0;
-    uint8_t cache = 0;
+    uint8_t working_satae = 1;//0-ÆÕÍ¨5v  //1-qc2.0Ç°×à   //2-qc2.0-9v
     uint32_t DAC_Value;
     sys_int();
     while (1)
     {
-
-        for(i = 0; i < 20000; i++);
-        //for(i = 0; i < 200000; i++);
-
-        DAC_Value = 0x2e8;
-        DAC_WriteData(DAC0, DAC_Value, 0);
-
-        ADC_Start(ADC0, adcStartSingle);
-        /* Wait while conversion is active */
-        while (ADC0->STATUS & ADC_STATUS_SINGLEACT) ;
-        /* Get ADC result */
-        sample = ADC_DataSingleGet(ADC0);
-
-        if(sample < 0xd0 )
+        switch(working_satae)
         {
-        	for(i = 0; i < 200000; i++);
-        	ADC_Start(ADC0, adcStartSingle);
-			/* Wait while conversion is active */
-			while (ADC0->STATUS & ADC_STATUS_SINGLEACT) ;
-			/* Get ADC result */
-			sample = ADC_DataSingleGet(ADC0);
-			if(sample < 0xd0 )
+			case 0:
 			{
-            GPIO_PinOutSet(gpioPortA, 8);
-           GPIO_PinModeSet(gpioPortE, 13, gpioModePushPullDrive, 1);
-           GPIO_PinOutSet(gpioPortE, 13);
-           DAC_Value = 0xfff;
-           DAC_WriteData(DAC0, DAC_Value, 0);
-           GPIO_PinOutToggle(gpioPortA, 9);
-        	while(1)
-        	{
-        		for(i = 0; i < 200000; i++);
-				ADC_Start(ADC0, adcStartSingle);
-				/* Wait while conversion is active */
-				while (ADC0->STATUS & ADC_STATUS_SINGLEACT) ;
-				/* Get ADC result */
-				sample = ADC_DataSingleGet(ADC0);
-				if(sample>0xffe)break;
-        	}
-			}
+				for(i = 0; i < 20000; i++);
+				DAC_Enable(DAC0, 0, 0);
+				ADC0_get_send_result();
+				break;
+			}//case 0
+			case 1:
+			{
+				DAC_Enable(DAC0, 0, 1);
+				for(i = 0; i < 20000; i++);
+				DAC_Value = 0x2e8;
+				DAC_WriteData(DAC0, DAC_Value, 0);
+				sample =  ADC0_get_send_result();
+				if(sample < 0xd0 )
+				{
+					for(i = 0; i < 20000; i++);
+					sample =  ADC0_get_result();
+					if(sample < 0xd0 )
+					{
+						GPIO_PinOutSet(gpioPortA, 8);
+						GPIO_PinModeSet(gpioPortE, 13, gpioModePushPullDrive, 1);
+						GPIO_PinOutSet(gpioPortE, 13);
+						DAC_Value = 0xfff;
+						DAC_WriteData(DAC0, DAC_Value, 0);
+						GPIO_PinOutClear(gpioPortA, 9);
+						working_satae = 2;
+					}
+					else
+					{
+						GPIO_PinOutClear(gpioPortA, 8);
+						GPIO_PinOutSet(gpioPortA, 9);
+						GPIO_PinOutClear(gpioPortE, 13);
+						GPIO_PinModeSet(gpioPortE, 13, gpioModeInput, 0);
+					}
 
+				}
+				break;
+			}//case 1
+			case 2:
+			{
+				DAC_Enable(DAC0, 0, 1);
+				for(i = 0; i < 20000; i++);
+				sample = ADC0_get_send_result();
+				if(sample > 0x800)
+				{
+					working_satae = 1;
+					GPIO_PinOutClear(gpioPortA, 8);
+					GPIO_PinOutSet(gpioPortA, 9);
+					GPIO_PinOutClear(gpioPortE, 13);
+					GPIO_PinModeSet(gpioPortE, 13, gpioModeInput, 0);
+				}
+				break;
+			}//case 2
         }
-        else
-        {
-            GPIO_PinOutClear(gpioPortA, 8);
-            GPIO_PinModeSet(gpioPortE, 13, gpioModeInput, 0);
-        }
-
-        cache1 = sample;
-        sample >>= 8;
-        cache = sample;
-        USART_Tx(USART0, cache);
-        USART_Tx(USART0, cache1);
     }
 }
 
