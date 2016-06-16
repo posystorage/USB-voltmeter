@@ -117,6 +117,19 @@ void adc_change_input_ch(uint8_t ch)
         initsingle.rep = 0;
         ADC_InitSingle(ADC0, &initsingle);
         break;
+
+    case 6:
+    	initsingle.prsSel = adcPRSSELCh0;
+		initsingle.acqTime = adcAcqTime64;
+		initsingle.reference = adcRef1V25;
+		initsingle.resolution = adcRes12Bit;
+		initsingle.input = adcSingleInpCh6;
+		initsingle.diff = 0;
+		initsingle.prsEnable = 0;
+		initsingle.leftAdjust = 0;
+		initsingle.rep = 0;
+		ADC_InitSingle(ADC0, &initsingle);
+		break;
     }
 }
 
@@ -128,7 +141,7 @@ int main(void)
     int i;
 
     uint32_t sample;
-    uint8_t working_satae = 1;//0-普通5v  //1-qc2.0前奏   //2-qc2.0-9v
+    uint8_t working_satae = 1;//0-普通5v  //1-qc2.0插入前  //2-qc2.0前奏   //3-qc2.0-9v
     uint32_t DAC_Value;
     sys_int();
     while (1)
@@ -141,9 +154,34 @@ int main(void)
 				DAC_Enable(DAC0, 0, 0);
 				adc_change_input_ch(4);
 				ADC0_get_send_result();
+				adc_change_input_ch(6);
+				ADC0_get_send_result();
 				break;
 			}//case 0
 			case 1:
+			{
+				for(i = 0; i < 20000; i++);
+				DAC_Value = 0x2e8;
+				DAC_WriteData(DAC0, DAC_Value, 0);
+				adc_change_input_ch(4);
+				ADC0_get_send_result();
+				adc_change_input_ch(6);
+				ADC0_get_send_result();
+				adc_change_input_ch(5);
+				sample =  ADC0_get_result();
+				if(sample > 0x600 )
+				{
+					for(i = 0; i < 200; i++);
+					adc_change_input_ch(5);
+					sample =  ADC0_get_result();
+					if(sample > 0x600 )
+					{
+						working_satae = 2;
+					}
+				}
+				break;
+			}
+			case 2:
 			{
 				DAC_Enable(DAC0, 0, 1);
 				for(i = 0; i < 20000; i++);
@@ -151,13 +189,15 @@ int main(void)
 				DAC_WriteData(DAC0, DAC_Value, 0);
 				adc_change_input_ch(4);
 				ADC0_get_send_result();
+				adc_change_input_ch(6);
+				ADC0_get_send_result();
 				adc_change_input_ch(5);
 				sample =  ADC0_get_result();
 
 				if(sample < 0xd0 )
 				{
 					for(i = 0; i < 20000; i++);
-					//adc_change_input_ch(5);
+					adc_change_input_ch(5);
 					sample =  ADC0_get_result();
 					if(sample < 0xd0 )
 					{
@@ -167,7 +207,7 @@ int main(void)
 						DAC_Value = 0xfff;
 						DAC_WriteData(DAC0, DAC_Value, 0);
 						GPIO_PinOutClear(gpioPortA, 9);
-						working_satae = 2;
+						working_satae = 3;
 					}
 					else
 					{
@@ -181,20 +221,22 @@ int main(void)
 
 				break;
 			}//case 1
-			case 2:
+			case 3:
 			{
 				DAC_Enable(DAC0, 0, 1);
 				for(i = 0; i < 20000; i++);
 				adc_change_input_ch(4);
 				ADC0_get_send_result();
+				adc_change_input_ch(6);
+				ADC0_get_send_result();
 				adc_change_input_ch(5);
 				sample = ADC0_get_result();
-				if(sample > 0x840)
+				if(sample > 0x7a0)
 				{
 					for(i = 0; i < 20000; i++);
 					//adc_change_input_ch(5);
 					sample =  ADC0_get_result();
-					if(sample > 0x800)
+					if(sample > 0x780)
 					{
 					working_satae = 1;
 					GPIO_PinOutClear(gpioPortA, 8);

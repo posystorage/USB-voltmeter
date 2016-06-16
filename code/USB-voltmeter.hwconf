@@ -4,8 +4,9 @@
     <property object="ADC0" propertyId="ABPeripheral.included" value="true"/>
     <property object="ADC0" propertyId="adc.inputsettings.ch4" value="Enabled"/>
     <property object="ADC0" propertyId="adc.inputsettings.ch5" value="Enabled"/>
+    <property object="ADC0" propertyId="adc.inputsettings.ch6" value="Enabled"/>
     <property object="ADC0" propertyId="scanmode.scanmodesettings.reference" value="Buffered VDD"/>
-    <property object="ADC0" propertyId="scanmode.scanmodesettings.scaninput" value="ADC_SCANCTRL_INPUTMASK_CH4&#xA;     | ADC_SCANCTRL_INPUTMASK_CH5"/>
+    <property object="ADC0" propertyId="scanmode.scanmodesettings.scaninput" value="ADC_SCANCTRL_INPUTMASK_CH4&#xA;     | ADC_SCANCTRL_INPUTMASK_CH5&#xA;     | ADC_SCANCTRL_INPUTMASK_CH6"/>
     <property object="ADC0" propertyId="singlesamplemode.singlesamplemodesettings.acquisitiontimeadcclockcycles" value="64"/>
     <property object="ADC0" propertyId="singlesamplemode.singlesamplemodesettings.input" value="Channel 5 (PD5)"/>
     <property object="ADC0" propertyId="singlesamplemode.singlesamplemodesettings.singlesamplemode" value="Enabled"/>
@@ -34,6 +35,7 @@
     <property object="PE13" propertyId="ports.settings.pinmode" value="Input"/>
     <property object="PORTIO" propertyId="portio.adc0.enable.ch4" value="Enabled"/>
     <property object="PORTIO" propertyId="portio.adc0.enable.ch5" value="Enabled"/>
+    <property object="PORTIO" propertyId="portio.adc0.enable.ch6" value="Enabled"/>
     <property object="PORTIO" propertyId="portio.dac0.enable.out0" value="Enabled"/>
     <property object="PORTIO" propertyId="portio.usart0.enable.rx" value="Enabled"/>
     <property object="PORTIO" propertyId="portio.usart0.enable.tx" value="Enabled"/>

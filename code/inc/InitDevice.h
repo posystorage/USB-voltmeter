@@ -48,6 +48,9 @@ extern void PORTIO_enter_DefaultMode_from_RESET(void);
 #define ADC0_CH5_PIN        (5)
 #define ADC0_CH5_PORT       (gpioPortD)
 
+#define ADC0_CH6_PIN        (6)
+#define ADC0_CH6_PORT       (gpioPortD)
+
 #define DAC0_OUT0_PIN       (11)
 #define DAC0_OUT0_PORT      (gpioPortB)
 
