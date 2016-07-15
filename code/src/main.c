@@ -11,7 +11,14 @@
 #include "em_adc.h"
 #include "em_dac.h"
 
+#define show_vi				//show voltage and current data
+//#define show_t_dat		//show usb_dm voltage data(for debug)
 
+//#define dm_port gpioPortB
+//#define dm_pin 8
+
+#define dm_port gpioPortE
+#define dm_pin 13
 
 void USART0_RX_IRQHandler(void)
 {
@@ -144,18 +151,22 @@ int main(void)
     uint8_t working_satae = 1;//0-普通5v  //1-qc2.0插入前  //2-qc2.0前奏   //3-qc2.0-9v
     uint32_t DAC_Value;
     sys_int();
+	GPIO_PinOutClear(gpioPortB, 8);
     while (1)
     {
         switch(working_satae)
         {
+        //USART_Tx(USART0, working_satae);
 			case 0:
 			{
 				for(i = 0; i < 20000; i++);
 				DAC_Enable(DAC0, 0, 0);
+#ifdef show_vi
 				adc_change_input_ch(4);
 				ADC0_get_send_result();
 				adc_change_input_ch(6);
 				ADC0_get_send_result();
+#endif
 				break;
 			}//case 0
 			case 1:
@@ -163,17 +174,27 @@ int main(void)
 				for(i = 0; i < 20000; i++);
 				DAC_Value = 0x2e8;
 				DAC_WriteData(DAC0, DAC_Value, 0);
+#ifdef show_vi
 				adc_change_input_ch(4);
 				ADC0_get_send_result();
 				adc_change_input_ch(6);
 				ADC0_get_send_result();
+#endif
 				adc_change_input_ch(5);
+#ifdef show_t_dat
+				sample =  ADC0_get_send_result();
+#else
 				sample =  ADC0_get_result();
+#endif
 				if(sample > 0x600 )
 				{
 					for(i = 0; i < 200; i++);
 					adc_change_input_ch(5);
+#ifdef show_t_dat
+					sample =  ADC0_get_send_result();
+#else
 					sample =  ADC0_get_result();
+#endif
 					if(sample > 0x600 )
 					{
 						working_satae = 2;
@@ -187,23 +208,33 @@ int main(void)
 				for(i = 0; i < 20000; i++);
 				DAC_Value = 0x2e8;
 				DAC_WriteData(DAC0, DAC_Value, 0);
+#ifdef show_vi
 				adc_change_input_ch(4);
 				ADC0_get_send_result();
 				adc_change_input_ch(6);
 				ADC0_get_send_result();
+#endif
 				adc_change_input_ch(5);
+#ifdef show_t_dat
+				sample =  ADC0_get_send_result();
+#else
 				sample =  ADC0_get_result();
+#endif
 
 				if(sample < 0xd0 )
 				{
 					for(i = 0; i < 20000; i++);
 					adc_change_input_ch(5);
+#ifdef show_t_dat
+					sample =  ADC0_get_send_result();
+#else
 					sample =  ADC0_get_result();
+#endif
 					if(sample < 0xd0 )
 					{
 						GPIO_PinOutSet(gpioPortA, 8);
-						GPIO_PinModeSet(gpioPortE, 13, gpioModePushPullDrive, 1);
-						GPIO_PinOutSet(gpioPortE, 13);
+						GPIO_PinModeSet(dm_port, dm_pin, gpioModePushPullDrive, 1);
+						GPIO_PinOutSet(dm_port, dm_pin);
 						DAC_Value = 0xfff;
 						DAC_WriteData(DAC0, DAC_Value, 0);
 						GPIO_PinOutClear(gpioPortA, 9);
@@ -213,8 +244,8 @@ int main(void)
 					{
 						GPIO_PinOutClear(gpioPortA, 8);
 						GPIO_PinOutSet(gpioPortA, 9);
-						GPIO_PinOutClear(gpioPortE, 13);
-						GPIO_PinModeSet(gpioPortE, 13, gpioModeInput, 0);
+						GPIO_PinOutClear(dm_port, dm_pin);
+						GPIO_PinModeSet(dm_port, dm_pin, gpioModeInput, 0);
 					}
 
 				}
@@ -225,24 +256,34 @@ int main(void)
 			{
 				DAC_Enable(DAC0, 0, 1);
 				for(i = 0; i < 20000; i++);
+#ifdef show_vi
 				adc_change_input_ch(4);
 				ADC0_get_send_result();
 				adc_change_input_ch(6);
 				ADC0_get_send_result();
+#endif
 				adc_change_input_ch(5);
-				sample = ADC0_get_result();
+#ifdef show_t_dat
+				sample =  ADC0_get_send_result();
+#else
+				sample =  ADC0_get_result();
+#endif
 				if(sample > 0x7a0)
 				{
 					for(i = 0; i < 20000; i++);
-					//adc_change_input_ch(5);
+					adc_change_input_ch(5);
+#ifdef show_t_dat
+					sample =  ADC0_get_send_result();
+#else
 					sample =  ADC0_get_result();
+#endif
 					if(sample > 0x780)
 					{
 					working_satae = 1;
 					GPIO_PinOutClear(gpioPortA, 8);
 					GPIO_PinOutSet(gpioPortA, 9);
-					GPIO_PinOutClear(gpioPortE, 13);
-					GPIO_PinModeSet(gpioPortE, 13, gpioModeInput, 0);
+					GPIO_PinOutClear(dm_port, dm_pin);
+					GPIO_PinModeSet(dm_port, dm_pin, gpioModeInput, 0);
 					}
 				}
 				break;

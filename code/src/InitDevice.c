@@ -436,6 +436,10 @@ extern void PORTIO_enter_DefaultMode_from_RESET(void) {
 	// [Port A Configuration]$
 
 	// $[Port B Configuration]
+
+	/* Pin PB8 is configured to Input enabled */
+	GPIO->P[1].MODEH = (GPIO->P[1].MODEH & ~_GPIO_P_MODEH_MODE8_MASK)
+			| GPIO_P_MODEH_MODE8_INPUT;
 	// [Port B Configuration]$
 
 	// $[Port C Configuration]

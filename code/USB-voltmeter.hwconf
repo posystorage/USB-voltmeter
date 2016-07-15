@@ -22,6 +22,7 @@
     <property object="PA9" propertyId="ports.settings.pinmode" value="Push-pull drive"/>
     <property object="PA9" propertyId="ports.settings.pulldirection" value="Pullup"/>
     <property object="PA9" propertyId="ports.settings.pullup" value="Enabled"/>
+    <property object="PB8" propertyId="ports.settings.pinmode" value="Input"/>
     <property object="PE10" propertyId="ports.settings.dout" value="1"/>
     <property object="PE10" propertyId="ports.settings.filter" value="Enabled"/>
     <property object="PE10" propertyId="ports.settings.pinmode" value="Push-pull"/>
